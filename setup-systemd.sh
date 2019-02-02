@@ -26,7 +26,7 @@ OnUnitActiveSec=15min
 WantedBy=timers.target
 EOF
 
-# Enable the systemd service
+# Enable the systemd timer
 sudo systemctl daemon-reload
-sudo systemctl enable homebridge-harmony
-sudo systemctl start homebridge-harmony
+sudo systemctl enable ddns53.timer
+sudo systemctl start ddns53.timer
