@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+# Create systemd service config files
 sudo tee /etc/systemd/system/ddns53.service << EOF
 [Unit]
 Description=Set an A record in an AWS Route 53 Hosted Zone to the current public IP address
@@ -21,3 +25,8 @@ OnUnitActiveSec=15min
 [Install]
 WantedBy=timers.target
 EOF
+
+# Enable the systemd service
+sudo systemctl daemon-reload
+sudo systemctl enable homebridge-harmony
+sudo systemctl start homebridge-harmony
