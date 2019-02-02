@@ -37,3 +37,9 @@ Set an A record in an AWS Route 53 Hosted Zone to the current public IP address
 2. Rename `.env.example` to `.env` and fill in values
 
 3. Run `aws configure`
+
+# Running on a timer
+
+## systemd
+
+Run `setup-systemd.sh` to run `ddns53` every 15 minutes.
