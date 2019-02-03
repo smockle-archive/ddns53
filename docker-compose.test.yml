@@ -1,6 +1,8 @@
-sut:
-  build:
-    context: .
-    args:
-      ONTEST: "ONTEST"
-  command: /usr/local/bin/ddns53.test.sh
+version: "3"
+services:
+  sut:
+    build:
+      context: .
+      args:
+        ONTEST: "ONTEST"
+    command: /usr/local/bin/ddns53.test.sh
