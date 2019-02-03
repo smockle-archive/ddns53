@@ -53,3 +53,13 @@ docker run -d \
     -e AWS_DEFAULT_OUTPUT \
     smockle/ddns53
 ```
+
+# Developing
+
+```Bash
+# Build and run, without tags, then clean
+docker run --rm -it $(docker build -q .)
+
+# Build and run, with tags, without cleaning
+docker build -t ddns53-devel . && docker run -it ddns53-devel
+```
