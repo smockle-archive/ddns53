@@ -1,3 +1,5 @@
 sut:
   build: .
-  command: run_tests.sh
+  command: /usr/local/bin/ddns53.test.sh
+  args:
+    ONTEST: true
