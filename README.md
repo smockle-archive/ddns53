@@ -4,7 +4,7 @@ Set an A record in an AWS Route 53 Hosted Zone to the current public IP address
 
 # Setup
 
-1. Attach the following policy to an IAM User (replacing `<HOSTED_ZONE_ID>`):
+Attach the following policy to an IAM User (replacing `<HOSTED_ZONE_ID>`):
 
 ```JSON
 {
@@ -34,10 +34,22 @@ Set an A record in an AWS Route 53 Hosted Zone to the current public IP address
 }
 ```
 
-2. Rename `.env.example` to `.env` and fill in values
+# Usage
 
-3. Run `aws configure`
+```Bash
+# With environment file
+docker run -d --restart=unless-stopped --net=host --name=ddns53 --env-file=~/.ddns53/config smockle/ddns53
 
-# Running on a timer
-
-Run `setup-systemd.sh` to run `ddns53` every 15 minutes using `systemd`
+# Without environment file
+docker run -d \
+    --restart=unless-stopped \
+    --net=host \
+    --name=ddns53 \
+    -e HOSTED_ZONE_ID \
+    -e DOMAIN \
+    -e AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY \
+    -e AWS_DEFAULT_REGION \
+    -e AWS_DEFAULT_OUTPUT \
+    smockle/ddns53
+```

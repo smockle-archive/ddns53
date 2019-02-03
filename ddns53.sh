@@ -1,13 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-# Get environment variables
-if [ ! -f "$(dirname "$(readlink -f "$0")")/.env" ]; then
-  echo "Missing .env file for ddns53. Exiting."
-  exit 1
-fi
-export $(cat "$(dirname "$(readlink -f "$0")")/.env" | xargs)
-
 # Get public IP address
 IP_ADDRESS=$(dig +short myip.opendns.com @resolver1.opendns.com)
 if [ -z $IP_ADDRESS ]; then
