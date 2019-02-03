@@ -1,9 +1,0 @@
-[Unit]
-Description=Periodically update an A record
-Wants=network-online.target
-After=syslog.target network-online.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/bin/ddns53.sh
-User=root
