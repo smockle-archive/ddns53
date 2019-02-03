@@ -1,6 +1,6 @@
 # ddns53
 
-Set an A record in an AWS Route 53 Hosted Zone to the current public IP address
+Set an A record in an AWS Route 53 Hosted Zone to the current public IP address. `ddns53` is designed to run in an Alpine Linux-based Docker container.
 
 # Setup
 
