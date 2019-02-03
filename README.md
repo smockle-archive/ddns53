@@ -69,4 +69,4 @@ docker exec -it $(docker ps -q) sh
 
 # Testing
 
-When built with the `--build-arg ONTEST=true` option, a test script is included in `/usr/local/bin/ddns53.test.sh`.
+When built with the `--build-arg ONTEST="ONTEST"` option, a test script is included in `/usr/local/bin/ddns53.test.sh`.
