@@ -9,10 +9,8 @@ printf "ok\n"
 
 # Test file permissions
 printf "Test file permissions..."
-echo $(stat -c %a /usr/local/bin/ddns53.sh)
-echo $(stat -c %a /etc/periodic/15min/ddns53)
-# $([ $(stat -c %a /usr/local/bin/ddns53.sh) -eq 755 ] && exit 0 || exit 1)
-# $([ $(stat -c %a /etc/periodic/15min/ddns53) -eq 777 ] && exit 0 || exit 1)
+[ $(stat -c %a /usr/local/bin/ddns53.sh) -eq 755 ] || exit 1
+[ $(stat -c %a /etc/periodic/15min/ddns53) -eq 777 ] || exit 1
 printf "ok\n"
 
 # Test environment variables
