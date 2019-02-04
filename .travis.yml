@@ -9,42 +9,29 @@ addons:
       - docker-ce
       - qemu-user-static
 stages:
-  - build
-  - deploy
-  - name: deploy manifest
+  - "Build & Test"
+  - name: "Deploy"
+    if: branch = master AND repo = smockle/ddns53
+  - name: "Deploy Manifest"
     if: branch = master AND repo = smockle/ddns53
 jobs:
   include:
     # BUILD
-    - stage: build
+    - stage: "Build & Test"
+      name: amd64
       script:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
         - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
         - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
     - #
+      name: arm
       script:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
         - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
         - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
     # DEPLOY
-    - stage: deploy
-      script: skip
-      deploy:
-        - provider: script
-          skip_cleanup: true
-          script:
-            - docker images ls
-          if: branch = master OR branch != master
-    - #
-      script: skip
-      deploy:
-        - provider: script
-          skip_cleanup: true
-          script:
-            - docker images ls
-          if: branch = master OR branch != master
-    # DEPLOY MANIFEST
-    - stage: deploy manifest
+    - stage: "Deploy"
+      name: amd64
       script: skip
       deploy:
         - provider: script
@@ -52,7 +39,30 @@ jobs:
           script:
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - docker push smockle/ddns53:amd64
+         on:
+            branch: master
+            repo: smockle/ddns53
+            tags: false
+    - #
+      name: arm
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
+            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - docker push smockle/ddns53:arm
+          on:
+            branch: master
+            repo: smockle/ddns53
+            tags: false
+    # DEPLOY MANIFEST
+    - stage: "Deploy Manifest"
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
             - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm
             - docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64
             - docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm
