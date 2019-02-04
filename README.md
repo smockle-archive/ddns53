@@ -3,7 +3,7 @@
 
 # ddns53
 
-Set an A record in an AWS Route 53 Hosted Zone to the current public IP address. `ddns53` is designed to run in an Alpine Linux-based Docker container.
+Set an A record in an AWS Route 53 Hosted Zone to the current public IP address. `ddns53` is designed to run in an Alpine Linux-based Docker container with support for multiple architectures (currently amd64 and arm).
 
 # Setup
 
@@ -41,12 +41,11 @@ Attach the following policy to an IAM User (replacing `<HOSTED_ZONE_ID>`):
 
 ```Bash
 # With environment file
-docker run -d --restart=unless-stopped --net=host --name=ddns53 --env-file=~/.ddns53/config smockle/ddns53
+docker run -d --restart=unless-stopped --name=ddns53 --env-file=~/.ddns53/config smockle/ddns53
 
 # Without environment file
 docker run -d \
     --restart=unless-stopped \
-    --net=host \
     --name=ddns53 \
     -e HOSTED_ZONE_ID \
     -e DOMAIN \
