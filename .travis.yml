@@ -12,6 +12,11 @@ addons:
     packages:
       - docker-ce
       - qemu-user-static
+stages:
+  - name: build
+  - name: dummy deploy
+  - name: deploy
+    if: branch = master AND repo = smockle/ddns53
 jobs:
   include:
     - stage: build
