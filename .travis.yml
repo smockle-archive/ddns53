@@ -36,10 +36,8 @@ jobs:
       deploy:
         - provider: script
           skip_cleanup: true
-          script:
-            - docker images ls
-            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            - docker push smockle/ddns53:amd64
+          before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          script: docker push smockle/ddns53:amd64
           on:
             branch: master
             repo: smockle/ddns53
@@ -50,10 +48,8 @@ jobs:
       deploy:
         - provider: script
           skip_cleanup: true
-          script:
-            - docker images ls
-            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-            - docker push smockle/ddns53:arm
+          before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+          script: docker push smockle/ddns53:arm
           on:
             branch: master
             repo: smockle/ddns53
