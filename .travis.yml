@@ -22,9 +22,9 @@ jobs:
         - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
         - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
       after_success:
-        - if [ "$TRAVIS_BRANCH" -ne "master" ] || [ "$TRAVIS_PULL_REQUEST" -eq "true" ]; then echo "Stopping without pushing image." && exit 0; fi
+        - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_PULL_REQUEST" != "true" ]; then echo "Stopping without pushing image." && exit 0; fi
         - echo "Pushing image."
-        - docker images ls
+        - docker image ls
         # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         # - docker push smockle/ddns53:amd64
     - #
@@ -34,16 +34,16 @@ jobs:
         - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
         - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
       after_success:
-        - if [ "$TRAVIS_BRANCH" -ne "master" ] || [ "$TRAVIS_PULL_REQUEST" -eq "true" ]; then echo "Stopping without pushing image." && exit 0; fi
+        - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_PULL_REQUEST" != "true" ]; then echo "Stopping without pushing image." && exit 0; fi
         - echo "Pushing image."
-        # - docker images ls
+        - docker image ls
         # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
         # - docker push smockle/ddns53:arm
     # DEPLOY
     - stage: "Deploy"
       name: latest
       script: skip
-      before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      before_deploy: docker image ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       deploy:
         - provider: script
           skip_cleanup: true
