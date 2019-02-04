@@ -33,10 +33,10 @@ jobs:
     - stage: "Deploy"
       name: amd64
       script: skip
+      before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       deploy:
         - provider: script
           skip_cleanup: true
-          before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           script: docker push smockle/ddns53:amd64
           on:
             branch: master
@@ -45,10 +45,10 @@ jobs:
     - #
       name: arm
       script: skip
+      before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       deploy:
         - provider: script
           skip_cleanup: true
-          before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           script: docker push smockle/ddns53:arm
           on:
             branch: master
@@ -58,14 +58,11 @@ jobs:
     - stage: "Deploy Manifest"
       name: latest
       script: skip
+      before_deploy: docker images ls && echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       deploy:
         - provider: script
           skip_cleanup: true
-          script:
-            - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm
-            - docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64
-            - docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm
-            - docker manifest push smockle/ddns53:latest
+          script: docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm && docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64 && docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm && docker manifest push smockle/ddns53:latest
           on:
             branch: master
             repo: smockle/ddns53
