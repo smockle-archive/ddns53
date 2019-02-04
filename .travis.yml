@@ -3,29 +3,28 @@ notifications:
   email:
     on_success: change
     on_failure: change
-env:
-  matrix:
-    - BUILD_ARCH=amd64 MANIFEST_ARCH=amd64
-    - BUILD_ARCH=armhf MANIFEST_ARCH=arm
 addons:
   apt:
     packages:
       - docker-ce
       - qemu-user-static
 stages:
-  - test
-  - dummy deploy
+  - build
+  - fakedeploy
   - name: deploy
     if: branch = master AND repo = smockle/ddns53
 jobs:
   include:
-    - stage: test
-      name: build
+    - stage: build
       script:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-        - docker build --build-arg ARCH="$BUILD_ARCH" --build-arg ONTEST="ONTEST" -t smockle/ddns53:$MANIFEST_ARCH -f Dockerfile .
-        - docker run --rm -it smockle/ddns53:$MANIFEST_ARCH sh -c /usr/local/bin/ddns53.test.sh
-    - stage: dummy deploy
+        - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
+        - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
+      script:
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+        - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
+        - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
+    - stage: fakedeploy
       script: skip
       deploy:
         - provider: script
