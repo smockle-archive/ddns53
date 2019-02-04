@@ -20,6 +20,7 @@ jobs:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
         - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
         - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
+    - #
       script:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
         - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
