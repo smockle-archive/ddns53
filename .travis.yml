@@ -8,7 +8,7 @@ addons:
     packages:
       - docker-ce
 before_script:
-  # - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   # - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
   - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm32v6 -f Dockerfile .
 script:
