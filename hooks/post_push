@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm32v6
+docker manifest push smockle/ddns53:latest

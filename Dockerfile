@@ -1,6 +1,6 @@
-FROM alpine
-
-ARG ONTEST
+ARG CACHE_TAG="amd64"
+ARG ARCH=$CACHE_TAG
+FROM $ARCH/alpine
 
 # Install dependencies for 'dig' and 'aws'
 RUN apk add --no-cache bind-tools python py-pip
@@ -16,6 +16,7 @@ COPY ddns53.sh /usr/local/bin/ddns53.sh
 RUN chmod +x /usr/local/bin/ddns53.sh
 
 # ONTEST: Copy ddns53 test script and make it executable
+ARG ONTEST
 COPY ddns53.test.sh /usr/local/bin/ddns53.test.sh
 RUN chmod +x /usr/local/bin/ddns53.test.sh
 RUN [ -z "${ONTEST}" ] && rm /usr/local/bin/ddns53.test.sh || exit 0
