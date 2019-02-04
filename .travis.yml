@@ -3,6 +3,10 @@ notifications:
   email:
     on_success: change
     on_failure: change
+env
+  matrix:
+    - BUILD_ARCH=amd64 MANIFEST_ARCH=amd64
+    - BUILD_ARCH=armhf MANIFEST_ARCH=arm
 addons:
   apt:
     packages:
@@ -10,14 +14,13 @@ addons:
       - qemu-user-static
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
-  - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
+  - docker build --build-arg ARCH="$BUILD_ARCH" --build-arg ONTEST="ONTEST" -t smockle/ddns53:$MANIFEST_ARCH -f Dockerfile .
 script:
-  - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
-  - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
+  - docker run --rm -it smockle/ddns53:$MANIFEST_ARCH sh -c /usr/local/bin/ddns53.test.sh
+after_success:
+  - echo $MANIFEST_ARCH
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - echo "Sentinel"
 deploy:
   - provider: script
     skip_cleanup: true
