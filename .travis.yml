@@ -58,6 +58,7 @@ jobs:
             tags: false
     # DEPLOY MANIFEST
     - stage: "Deploy Manifest"
+      name: latest
       script: skip
       deploy:
         - provider: script
