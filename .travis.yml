@@ -10,11 +10,12 @@ addons:
       - qemu-user-static
 stages:
   - build
-  - fakedeploy
-  - name: deploy
+  - deploy
+  - name: deploy manifest
     if: branch = master AND repo = smockle/ddns53
 jobs:
   include:
+    # BUILD
     - stage: build
       script:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
@@ -25,14 +26,25 @@ jobs:
         - docker run --rm --privileged multiarch/qemu-user-static:register --reset
         - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
         - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
-    - stage: fakedeploy
+    # DEPLOY
+    - stage: deploy
       script: skip
       deploy:
         - provider: script
           skip_cleanup: true
           script:
             - docker images ls
-    - stage: deploy
+          if: branch = master OR branch != master
+    - #
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
+            - docker images ls
+          if: branch = master OR branch != master
+    # DEPLOY MANIFEST
+    - stage: deploy manifest
       script: skip
       deploy:
         - provider: script
