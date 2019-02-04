@@ -9,8 +9,8 @@ printf "ok\n"
 
 # Test file permissions
 printf "Test file permissions..."
-[ $(stat -c %a /usr/local/bin/ddns53.sh) -eq 755 ] || exit 1
-[ $(stat -c %a /etc/periodic/15min/ddns53) -eq 777 ] || exit 1
+test -x /usr/local/bin/ddns53.sh
+test -x /etc/periodic/15min/ddns53
 printf "ok\n"
 
 # Test environment variables

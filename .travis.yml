@@ -7,13 +7,14 @@ addons:
   apt:
     packages:
       - docker-ce
+      - qemu-user-static
 before_script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  # - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
-  - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm32v6 -f Dockerfile .
+  - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
+  - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
 script:
-  # - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
-  - docker run --rm -it smockle/ddns53:arm32v6 sh -c /usr/local/bin/ddns53.test.sh
+  - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
+  - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - echo "Sentinel"
@@ -22,8 +23,10 @@ deploy:
     skip_cleanup: true
     script:
       - docker push smockle/ddns53:amd64
-      - docker push smockle/ddns53:arm32v7
-      - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm32v7
+      - docker push smockle/ddns53:arm
+      - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm
+      - docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64
+      - docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm
       - docker manifest push smockle/ddns53:latest
     on:
       branch: master
