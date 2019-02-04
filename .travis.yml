@@ -3,7 +3,7 @@ notifications:
   email:
     on_success: change
     on_failure: change
-env
+env:
   matrix:
     - BUILD_ARCH=amd64 MANIFEST_ARCH=amd64
     - BUILD_ARCH=armhf MANIFEST_ARCH=arm
