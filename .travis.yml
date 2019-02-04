@@ -1,13 +1,16 @@
 language: minimal
-os: osx
 notifications:
   email:
     on_success: change
     on_failure: change
+addons:
+  apt:
+    packages:
+      - docker-ce
 before_script:
-  - docker --version
+  # - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   # - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
-  - docker build --build-arg ARCH="arm32v6" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm32v6 -f Dockerfile .
+  - docker build --build-arg QEMU_ARCH="arm" --build-arg ALPINE_ARCH="arm32v6" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm32v6 -f Dockerfile .
 script:
   # - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
   - docker run --rm -it smockle/ddns53:arm32v6 sh -c /usr/local/bin/ddns53.test.sh

@@ -1,5 +1,13 @@
-ARG ARCH="amd64"
-FROM $ARCH/alpine
+ARG QEMU_ARCH
+ARG ALPINE_ARCH
+
+# Multiarch support via QEMU
+FROM multiarch/qemu-user-static:x86_64-$QEMU_ARCH as qemu
+FROM alpine as qemu_extract
+COPY --from=qemu /usr/bin qemu_user_static.tgz
+RUN tar -xzvf qemu_user_static.tgz
+
+FROM $ALPINE_ARCH/alpine
 
 # Install dependencies for 'dig' and 'aws'
 RUN apk add --no-cache bind-tools python py-pip
