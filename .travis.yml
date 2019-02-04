@@ -22,11 +22,8 @@ jobs:
         - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
         - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
       after_success:
-        - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_PULL_REQUEST" != "true" ]; then echo "Stopping without pushing image." && exit 0; fi
-        - echo "Pushing image."
-        - docker image ls
-        # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        # - docker push smockle/ddns53:amd64
+        - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_REPO_SLUG" == "smockle/ddns53" ]; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+        - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_REPO_SLUG" == "smockle/ddns53" ]; then docker push smockle/ddns53:amd64; fi
     - #
       name: arm
       script:
@@ -34,11 +31,8 @@ jobs:
         - docker build --build-arg ARCH="armhf" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm -f Dockerfile .
         - docker run --rm -it smockle/ddns53:arm sh -c /usr/local/bin/ddns53.test.sh
       after_success:
-        - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_PULL_REQUEST" != "true" ]; then echo "Stopping without pushing image." && exit 0; fi
-        - echo "Pushing image."
-        - docker image ls
-        # - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-        # - docker push smockle/ddns53:arm
+        - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_REPO_SLUG" == "smockle/ddns53" ]; then echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin; fi
+        - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_REPO_SLUG" == "smockle/ddns53" ]; then docker push smockle/ddns53:arm; fi
     # DEPLOY
     - stage: "Deploy"
       name: latest
