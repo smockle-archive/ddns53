@@ -18,8 +18,3 @@ printf "Test environment variables..."
 test -n "${AWS_DEFAULT_REGION}"
 test -n "${AWS_DEFAULT_OUTPUT}"
 printf "ok\n"
-
-# Test crond is running
-# printf "Test crond is running..."
-# ps | grep [c]rond &>/dev/null
-# printf "ok\n"

@@ -1,5 +1,4 @@
-ARG CACHE_TAG="amd64"
-ARG ARCH=$CACHE_TAG
+ARG ARCH="amd64"
 FROM $ARCH/alpine
 
 # Install dependencies for 'dig' and 'aws'

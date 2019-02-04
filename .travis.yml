@@ -1,0 +1,26 @@
+language: minimal
+notifications:
+  email:
+    on_success: change
+    on_failure: change
+before_script:
+  - docker build --build-arg ARCH="amd64" --build-arg ONTEST="ONTEST" -t smockle/ddns53:amd64 -f Dockerfile .
+  - docker build --buidl-arg ARCH="arm32v6" --build-arg ONTEST="ONTEST" -t smockle/ddns53:arm32v6 -f Dockerfile .
+script:
+  - docker run --rm -it smockle/ddns53:amd64 sh -c /usr/local/bin/ddns53.test.sh
+  - docker run --rm -it smockle/ddns53:arm32v6 sh -c /usr/local/bin/ddns53.test.sh
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "Sentinel"
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script:
+      - docker push smockle/ddns53:amd64
+      - docker push smockle/ddns53:arm32v7
+      - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm32v7
+      - docker manifest push smockle/ddns53:latest
+    on:
+      branch: master
+      repo: smockle/ddns53
+      tags: false
