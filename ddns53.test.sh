@@ -9,8 +9,8 @@ printf "ok\n"
 
 # Test file permissions
 printf "Test file permissions..."
-$([ $(stat -c %a /usr/local/bin/ddns53.sh) -eq 755 ] && exit 0 || exit 1)
-$([ $(stat -c %a /etc/periodic/15min/ddns53) -eq 777 ] && exit 0 || exit 1)
+test -x /usr/local/bin/ddns53.sh
+test -x /etc/periodic/15min/ddns53
 printf "ok\n"
 
 # Test environment variables
@@ -18,8 +18,3 @@ printf "Test environment variables..."
 test -n "${AWS_DEFAULT_REGION}"
 test -n "${AWS_DEFAULT_OUTPUT}"
 printf "ok\n"
-
-# Test crond is running
-# printf "Test crond is running..."
-# ps | grep [c]rond &>/dev/null
-# printf "ok\n"

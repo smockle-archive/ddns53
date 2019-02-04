@@ -1,4 +1,5 @@
-[![docker](https://img.shields.io/docker/build/smockle/ddns53.svg?style=flat)](https://hub.docker.com/r/smockle/ddns53)
+[![Build Status](https://travis-ci.com/smockle/ddns53.svg?branch=master)](https://travis-ci.com/smockle/ddns53)
+[![Docker Pulls](https://img.shields.io/docker/pulls/smockle/ddns53.svg?style=flat)](https://hub.docker.com/r/smockle/ddns53)
 
 # ddns53
 

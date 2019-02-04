@@ -1,6 +1,5 @@
-ARG CACHE_TAG="amd64"
-ARG ARCH=$CACHE_TAG
-FROM $ARCH/alpine
+ARG ARCH="amd64"
+FROM multiarch/alpine:$ARCH-edge
 
 # Install dependencies for 'dig' and 'aws'
 RUN apk add --no-cache bind-tools python py-pip
