@@ -39,7 +39,7 @@ jobs:
           script:
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - docker push smockle/ddns53:amd64
-         on:
+          on:
             branch: master
             repo: smockle/ddns53
             tags: false
