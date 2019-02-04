@@ -37,6 +37,7 @@ jobs:
         - provider: script
           skip_cleanup: true
           script:
+            - docker images ls
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - docker push smockle/ddns53:amd64
           on:
@@ -50,6 +51,7 @@ jobs:
         - provider: script
           skip_cleanup: true
           script:
+            - docker images ls
             - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
             - docker push smockle/ddns53:arm
           on:
