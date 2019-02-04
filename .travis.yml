@@ -12,26 +12,34 @@ addons:
     packages:
       - docker-ce
       - qemu-user-static
-before_script:
-  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build --build-arg ARCH="$BUILD_ARCH" --build-arg ONTEST="ONTEST" -t smockle/ddns53:$MANIFEST_ARCH -f Dockerfile .
-script:
-  - docker run --rm -it smockle/ddns53:$MANIFEST_ARCH sh -c /usr/local/bin/ddns53.test.sh
-after_success:
-  - echo $MANIFEST_ARCH
-before_deploy:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script:
-      - docker push smockle/ddns53:amd64
-      - docker push smockle/ddns53:arm
-      - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm
-      - docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64
-      - docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm
-      - docker manifest push smockle/ddns53:latest
-    on:
-      branch: master
-      repo: smockle/ddns53
-      tags: false
+jobs:
+  include:
+    - stage: build
+      script:
+        - docker run --rm --privileged multiarch/qemu-user-static:register --reset
+        - docker build --build-arg ARCH="$BUILD_ARCH" --build-arg ONTEST="ONTEST" -t smockle/ddns53:$MANIFEST_ARCH -f Dockerfile .
+        - docker run --rm -it smockle/ddns53:$MANIFEST_ARCH sh -c /usr/local/bin/ddns53.test.sh
+    - stage: dummy deploy
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
+            - docker images ls
+    - stage: deploy
+      script: skip
+      deploy:
+        - provider: script
+          skip_cleanup: true
+          script:
+            - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            - docker push smockle/ddns53:amd64
+            - docker push smockle/ddns53:arm
+            - docker manifest create smockle/ddns53:latest smockle/ddns53:amd64 smockle/ddns53:arm
+            - docker manifest annotate smockle/ddns53:latest smockle/ddns53:amd64 --os linux --arch amd64
+            - docker manifest annotate smockle/ddns53:latest smockle/ddns53:arm --os linux --arch arm
+            - docker manifest push smockle/ddns53:latest
+          on:
+            branch: master
+            repo: smockle/ddns53
+            tags: false
