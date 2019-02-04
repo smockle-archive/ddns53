@@ -1,3 +1,4 @@
+ARG ARCH="amd64"
 FROM multiarch/alpine:$ARCH-edge
 
 # Install dependencies for 'dig' and 'aws'
