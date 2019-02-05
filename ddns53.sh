@@ -8,5 +8,12 @@ if [ -z $IP_ADDRESS ]; then
   exit 1
 fi 
 
+# Check published IP address
+PUBLISHED_IP_ADDRESS=$(dig +short "${DOMAIN}")
+if [ "${IP_ADDRESS}" == "${PUBLISHED_IP_ADDRESS}" ]; then
+  echo "Published IP address is already up-to-date. Exiting."
+  exit 0
+fi
+
 # Set A record in the specified AWS Route 53 Hosted Zone
 aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --cli-input-json "{ \"ChangeBatch\": { \"Comment\": \"Set A record to a specified value\", \"Changes\": [{ \"Action\": \"UPSERT\", \"ResourceRecordSet\": { \"Name\": \"${DOMAIN}\", \"Type\": \"A\", \"TTL\": 300, \"ResourceRecords\": [{ \"Value\": \"${IP_ADDRESS}\" }] } }] } }"
