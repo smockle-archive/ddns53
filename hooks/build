@@ -1,0 +1,11 @@
+#!/bin/bash
+docker build \
+  --build-arg ARCH="armhf" \
+  -t smockle/ddns53:arm \
+  -f $DOCKERFILE_PATH .
+
+docker build \
+  --build-arg ARCH="amd64" \
+  -t smockle/ddns53:amd64 \
+  -t smockle/ddns53:$DOCKER_TAG \
+  -f $DOCKERFILE_PATH .

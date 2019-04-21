@@ -1,6 +1,5 @@
 # ddns53
 
-[![Build Status](https://travis-ci.com/smockle/ddns53.svg?branch=master)](https://travis-ci.com/smockle/ddns53)
 [![Docker Pulls](https://img.shields.io/docker/pulls/smockle/ddns53.svg?style=flat)](https://hub.docker.com/r/smockle/ddns53)
 
 Set an A record in an AWS Route 53 Hosted Zone to the current public IP address. `ddns53` is designed to run in an Alpine Linux-based Docker container with support for multiple architectures (currently amd64 and arm).
@@ -68,7 +67,3 @@ docker build -t ddns53-devel . && docker run -it ddns53-devel
 # Shell in running container
 docker exec -it $(docker ps -q) sh
 ```
-
-# Testing
-
-When built with the `--build-arg ONTEST="ONTEST"` option, a test script is included in `/usr/local/bin/ddns53.test.sh`.

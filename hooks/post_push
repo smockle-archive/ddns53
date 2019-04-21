@@ -1,0 +1,15 @@
+#!/bin/bash
+docker manifest create \
+  smockle/ddns53:latest \
+  smockle/ddns53:amd64 \
+  smockle/ddns53:arm
+
+docker manifest annotate \
+  smockle/ddns53:latest \
+  smockle/ddns53:arm --os linux --arch arm
+
+docker manifest annotate \
+  smockle/ddns53:latest \
+  smockle/ddns53:amd64 --os linux --arch amd64
+
+docker manifest push --purge smockle/ddns53:latest

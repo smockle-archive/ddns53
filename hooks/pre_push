@@ -1,0 +1,3 @@
+#!/bin/bash
+docker push smockle/ddns53:arm
+docker push smockle/ddns53:amd64

@@ -14,12 +14,6 @@ ENV AWS_DEFAULT_OUTPUT json
 COPY ddns53.sh /usr/local/bin/ddns53.sh
 RUN chmod +x /usr/local/bin/ddns53.sh
 
-# ONTEST: Copy ddns53 test script and make it executable
-ARG ONTEST
-COPY ddns53.test.sh /usr/local/bin/ddns53.test.sh
-RUN chmod +x /usr/local/bin/ddns53.test.sh
-RUN [ -z "${ONTEST}" ] && rm /usr/local/bin/ddns53.test.sh || exit 0
-
 # Run ddns53 now and every 15 minutes
 RUN ln -fs /usr/local/bin/ddns53.sh /etc/periodic/15min/ddns53
 CMD /usr/local/bin/ddns53.sh && crond -l 2 -f
