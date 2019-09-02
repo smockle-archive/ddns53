@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-set -eo pipefail
 
 # Get public IP address
 IP_ADDRESS=$(dig +short myip.opendns.com @resolver1.opendns.com)
